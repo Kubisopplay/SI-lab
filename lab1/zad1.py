@@ -15,17 +15,16 @@ def zad1(start, end, all_stops : dict, data : pd.DataFrame, start_hour):
         if currentnode.name == end:
             return get_path(currentnode, start)
         else:
-            for i in data.loc[data["start_stop"] == currentnode.name].itertuples():
-                child = Node(i[2], currentnode, i[6])
+            children = get_children(currentnode, all_stops, data)
+            for child in children:
                 if child in closedlist:
                     continue
-                child.g = currentnode.g + get_distance(currentnode.name, child.name)
-                child.h = get_distance(child.name, end)
-                child.f = child.g + child.h
-                if child in openlist:
-                    if child.g > currentnode.g:
-                        continue
-                openlist.append(child)
+            get_values(child, currentnode, end, all_stops)
+            for i in openlist:
+                if child.name == i.name and child.g > i.g:
+                    continue
+            openlist.append(child)
+            
 
 
 def get_path(currentnode, startnode):
@@ -36,3 +35,18 @@ def get_path(currentnode, startnode):
     path.append(startnode)
     path.reverse()
     return path
+
+def get_children(currentnode : Node, all_stops, data : pd.DataFrame):
+    children = []
+    for i in data["start_stop" == currentnode.name].itertouples():
+        child = Node(i["end_stop"], currentnode, i["arrival_time"])
+        children.append(child)
+    return children
+
+
+#magic happens here
+def get_values(child : Node, currentnode : Node, end, all_stops):
+    child.g = currentnode.g + get_distance(child.name, currentnode.name)
+    child.h = get_distance(child.name, end)
+    child.f = child.g + child.h
+    return child
