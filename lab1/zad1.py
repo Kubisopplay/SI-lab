@@ -46,14 +46,14 @@ def get_path(currentnode, startnode):
 
 def get_children(currentnode : Node, all_stops, data : pd.DataFrame):
     children = []
-    candidates = data.loc[data["start_stop"] == currentnode.name]
+    candidates = data.loc[data["start_stop"] == currentnode.name].sort_values(by="arrival_time")
+    candidates = candidates.loc[candidates["arrival_time"] > time.strftime("%H:%M:%S",currentnode.time)]
     for i in candidates.itertuples():
         child = Node(i.end_stop, currentnode, i.arrival_time)
         child.line = i.line
-        if child.time <= currentnode.time:
-            continue
         if abs(timediff(currentnode.time, child.time)) > 1000:
             continue
+        
         children.append(child)
        
     return children

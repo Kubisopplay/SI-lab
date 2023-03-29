@@ -3,7 +3,7 @@ import tkinter as tk
 import csv
 import os
 import pandas as pd 
-import threading
+import multiprocessing
 import math
 from helper import Node, get_distance,set_przystanki
 from zad1 import zad1
@@ -56,7 +56,7 @@ def thread_function(start, finish, hour):
     global default
     default += timeit.timeit(lambda: zad1(start, finish, przystanki, data, hour), number=1)
 for start, finish, hour in test_pairs:
-    x = threading.Thread(target=thread_function, args=(start, finish, hour))
+    x = multiprocessing.Process(target=thread_function, args=(start, finish, hour))
     threads.append(x)
     x.start()
 
