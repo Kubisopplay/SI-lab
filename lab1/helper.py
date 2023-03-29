@@ -1,20 +1,29 @@
 import time
+import math
+import datetime
+przystanki = dict()
+
+def set_przystanki(przystanki_):
+    global przystanki
+    przystanki = przystanki_
+
 def get_distance(name1, name2):
     global przystanki
     lat1, lon1 = przystanki[name1]
     lat2, lon2 = przystanki[name2]
-    R = 6371
-    dLat = (lat2-lat1)*3.141592/180
-    dLon = (lon2-lon1)*3.141592/180
-    a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(lat1*3.141592/180) * math.cos(lat2*3.141592/180) * math.sin(dLon/2) * math.sin(dLon/2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
-    d = R * c
-    return d
+    dLat = abs(lat2-lat1)
+    dLon = abs(lon2-lon1)
+    d = dLat + dLon
+    return d * 100000 #mnożenia są po to żeby rząd wielkości był podobny
 
     
     
-def strtotime(str):
-    return time.strptime(str, "%H:%M:%S")
+def strtotime(text):
+    if int(text[0:2]) >23:
+        text = str(int(text[0:2])-24) + text[2:] 
+    return time.strptime(text, "%H:%M:%S") #I hate this so much
+    
+ 
 
 class Node():
     def __init__(self, name, parent, time = "12:00:00"):
@@ -24,9 +33,20 @@ class Node():
         self.h = 0
         self.f = 0
         self.time = strtotime(time)
+        self.line = ""
 
     def __str__(self):
         return self.name
 
     def __repr__(self):
         return self.name
+    
+    def __eq__(self, other):
+        return self.name == other.name and self.time == other.time
+
+
+def timediff(time1 : time.struct_time, time2: time.struct_time):
+    if (time1.tm_hour == 0 ) and time2.tm_hour == 23 or time2.tm_hour == 0  and time1.tm_hour == 23:
+        return 100000000000000000 # magic number, I dont wanna deal with the midnight shit, im gonna fix it later. Hopefully. Maybe?
+    return (time2.tm_hour - time1.tm_hour)*3600 + (time2.tm_min - time1.tm_min)*60 + (time2.tm_sec - time1.tm_sec)
+        
