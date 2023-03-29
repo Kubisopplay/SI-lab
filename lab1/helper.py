@@ -46,7 +46,11 @@ class Node():
 
 
 def timediff(time1 : time.struct_time, time2: time.struct_time):
-    if (time1.tm_hour == 0 ) and time2.tm_hour == 23 or time2.tm_hour == 0  and time1.tm_hour == 23:
-        return 100000000000000000 # magic number, I dont wanna deal with the midnight shit, im gonna fix it later. Hopefully. Maybe?
+    if (time1.tm_hour == 0 ) and time2.tm_hour == 23 :
+        return (time2.tm_hour-24-time1.tm_hour)*3600 + (time2.tm_min - time1.tm_min)*60 + (time2.tm_sec - time1.tm_sec)
+    if time2.tm_hour == 0  and time1.tm_hour == 23:
+        return (time2.tm_hour+24 - time1.tm_hour)*3600 + (time2.tm_min - time1.tm_min)*60 + (time2.tm_sec - time1.tm_sec)
+        
+    
     return (time2.tm_hour - time1.tm_hour)*3600 + (time2.tm_min - time1.tm_min)*60 + (time2.tm_sec - time1.tm_sec)
         

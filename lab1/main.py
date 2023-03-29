@@ -10,7 +10,7 @@ from zad1 import zad1
 import cProfile
 import timeit
 
-raw_data = open('connection_graph.csv', 'r', encoding='utf-8')
+raw_data = open('C:\\Studia\\Sem6\\SI-lab\\lab1\\connection_graph.csv', 'r', encoding='utf-8')
 
 data =  pd.read_csv(raw_data, sep=',')
 
@@ -36,8 +36,9 @@ max_longitude = max([przystanki[i][1] for i in przystanki])
 
 print(min_latitude, min_longitude, max_latitude, max_longitude)
 
-cProfile.run('print(zad1("PL. GRUNWALDZKI", "DWORZEC GŁÓWNY", przystanki, data, "10:00:00"))', "wynik.txt")
+cProfile.run('zad1("PL. GRUNWALDZKI", "DWORZEC GŁÓWNY", przystanki, data, "10:00:00")', "wynik.txt")
 #print(zad1( "DWORZEC GŁÓWNY","PL. GRUNWALDZKI", przystanki, data, "20:00:00"))
+cProfile.run('zad1("Komuny Paryskiej", "Wilkszyn - Polna", przystanki, data, "01:39:39")', "wynik2.txt")
 random.seed(2137)
 test_pairs = []
 for i in range(10):
@@ -51,17 +52,12 @@ for i in range(10):
   
 #default values for time and distance factors
 default = 0 
-threads = []
-def thread_function(start, finish, hour):
-    global default
-    default += timeit.timeit(lambda: zad1(start, finish, przystanki, data, hour), number=1)
-for start, finish, hour in test_pairs:
-    x = multiprocessing.Process(target=thread_function, args=(start, finish, hour))
-    threads.append(x)
-    x.start()
 
-for thread in threads:
-    thread.join()
+for start, finish, hour in test_pairs:
+    print("start ", start, "finish ", finish, "hour ", hour)
+    default = default + timeit.timeit(lambda: zad1(start, finish, przystanki, data, hour), number=1)
+
+
 
 
 

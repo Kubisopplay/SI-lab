@@ -5,6 +5,7 @@ import threading
 from dateutil.relativedelta import *
 def zad1(start, end, all_stops : dict, data : pd.DataFrame, start_hour):
     startnode = Node(start, None, start_hour)
+    data.sort_values(by="arrival_time",inplace=True)
     openlist = [startnode]
     closedlist = []
     while len(openlist) > 0:
@@ -14,8 +15,8 @@ def zad1(start, end, all_stops : dict, data : pd.DataFrame, start_hour):
         currentnode = openlist.pop()
         #print(currentnode.name, time.strftime( "%H:%M:%S",currentnode.time), currentnode.line)
         closedlist.append(currentnode)
-        if len(closedlist) > 2000:
-            print("FAILURE")
+        if len(closedlist) > 10000:
+            print("Przeszedl 10000 wezlow, prawdopodobnie nie dziala")
             return None
         # success
         if currentnode.name == end:
@@ -46,15 +47,27 @@ def get_path(currentnode, startnode):
 
 def get_children(currentnode : Node, all_stops, data : pd.DataFrame):
     children = []
-    candidates = data.loc[data["start_stop"] == currentnode.name].sort_values(by="arrival_time")
+    candidates = data.loc[data["start_stop"] == currentnode.name]
     candidates = candidates.loc[candidates["arrival_time"] > time.strftime("%H:%M:%S",currentnode.time)]
+    unique_lines = candidates["end_stop"].unique().tolist()
+    candidates = candidates.drop_duplicates(subset=["end_stop"], keep="first")
     for i in candidates.itertuples():
         child = Node(i.end_stop, currentnode, i.arrival_time)
         child.line = i.line
+        children.append(child)
+        continue
         if abs(timediff(currentnode.time, child.time)) > 1000:
             continue
-        
+        if len(children) > 10:
+            if child.name in unique_lines:
+                children.append(child) 
+                unique_lines.remove(child.name)
+            if unique_lines == []:
+                break
+            continue
         children.append(child)
+
+    
        
     return children
 g_timefactor = 1
