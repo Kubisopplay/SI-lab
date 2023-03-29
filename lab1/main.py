@@ -1,3 +1,4 @@
+import random
 import tkinter as tk
 import csv
 import os
@@ -7,6 +8,7 @@ import math
 from helper import Node, get_distance,set_przystanki
 from zad1 import zad1
 import cProfile
+import timeit
 
 raw_data = open('connection_graph.csv', 'r', encoding='utf-8')
 
@@ -17,6 +19,10 @@ przystanki = dict()
 
 for i in data["start_stop"].unique():
     loc = data.loc[data["start_stop"] == i].iloc[0]
+    przystanki[i] = loc[7], loc[8]
+  
+for i in data["end_stop"].unique():
+    loc = data.loc[data["end_stop"] == i].iloc[0]
     przystanki[i] = loc[7], loc[8]
 
 set_przystanki(przystanki)
@@ -31,4 +37,32 @@ max_longitude = max([przystanki[i][1] for i in przystanki])
 print(min_latitude, min_longitude, max_latitude, max_longitude)
 
 cProfile.run('print(zad1("PL. GRUNWALDZKI", "DWORZEC GŁÓWNY", przystanki, data, "10:00:00"))', "wynik.txt")
-print(zad1( "DWORZEC GŁÓWNY","PL. GRUNWALDZKI", przystanki, data, "20:00:00"))
+#print(zad1( "DWORZEC GŁÓWNY","PL. GRUNWALDZKI", przystanki, data, "20:00:00"))
+random.seed(2137)
+test_pairs = []
+for i in range(10):
+    start = list(przystanki)[random.randint(0, len(przystanki)-1)]
+    end = list(przystanki)[random.randint(0, len(przystanki)-1)]
+    while end == start:
+        end = list(przystanki)[random.randint(0, len(przystanki.keys())-1)]
+    hour = str(random.randint(0, 23)).zfill(2) + ":" + str(random.randint(0, 59)).zfill(2) + ":" + str(random.randint(0, 59)).zfill(2)
+    
+    test_pairs.append((start, end,hour))
+  
+#default values for time and distance factors
+default = 0 
+threads = []
+def thread_function(start, finish, hour):
+    global default
+    default += timeit.timeit(lambda: zad1(start, finish, przystanki, data, hour), number=1)
+for start, finish, hour in test_pairs:
+    x = threading.Thread(target=thread_function, args=(start, finish, hour))
+    threads.append(x)
+    x.start()
+
+for thread in threads:
+    thread.join()
+
+
+
+print("default", default/10)
