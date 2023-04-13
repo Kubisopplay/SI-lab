@@ -43,6 +43,8 @@ class Node():
     
     def __eq__(self, other):
         return self.name == other.name and self.time == other.time
+    
+    
 
 
 def timediff(time1 : time.struct_time, time2: time.struct_time):

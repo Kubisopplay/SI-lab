@@ -1,5 +1,5 @@
 import random
-import tkinter as tk
+#import tkinter as tk
 import csv
 import os
 import pandas as pd 
@@ -36,9 +36,12 @@ max_longitude = max([przystanki[i][1] for i in przystanki])
 
 print(min_latitude, min_longitude, max_latitude, max_longitude)
 
-cProfile.run('zad1("PL. GRUNWALDZKI", "DWORZEC GŁÓWNY", przystanki, data, "10:00:00")', "wynik.txt")
+#cProfile.run('zad1("PL. GRUNWALDZKI", "DWORZEC GŁÓWNY", przystanki, data, "10:00:00")', "wynik.txt")
 #print(zad1( "DWORZEC GŁÓWNY","PL. GRUNWALDZKI", przystanki, data, "20:00:00"))
 cProfile.run('zad1("Komuny Paryskiej", "Wilkszyn - Polna", przystanki, data, "01:39:39")', "wynik2.txt")
+
+
+
 random.seed(123)
 test_pairs = []
 for i in range(3):
@@ -57,7 +60,7 @@ for start, finish, hour in test_pairs:
     print("start ", start, "finish ", finish, "hour ", hour)
     default = default + timeit.timeit(lambda: zad1(start, finish, przystanki, data, hour), number=1)
 djikstra = 0
-
+print(default, " Default values")
 
 #focused on time
 timefocus = 0
@@ -66,13 +69,13 @@ for start, finish, hour in test_pairs:
     timefocus += timeit.timeit(lambda: zad1(start, finish, przystanki, data, hour), number=1)
 
 
-
+print(timefocus, "Astar time focused")
 #focused on distance
 distancefocus = 0
 set_globals(1,0,10,0,5,0)
 for start, finish, hour in test_pairs:
     distancefocus += timeit.timeit(lambda: zad1(start, finish, przystanki, data, hour), number=1)
-
+print(distancefocus, "Astar distance focused")
 #transferfocus
 transferfocus = 0
 set_globals(1,0,10,0,0,1000)
