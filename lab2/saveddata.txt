@@ -1,0 +1,6 @@
+time:  535.3917665481567
+Ai_Random 16
+Ai_MinMaxBase(1) 21
+Ai_MinMaxBase(2) 25
+Ai_MinMaxBase(3) 25
+ABPruning(4) 32

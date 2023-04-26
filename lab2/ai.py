@@ -66,9 +66,9 @@ class Ai_MinMaxBase(Ai_Base):
     
     def minmax(self,node, depth: int, starting_side: int = 0):
         if depth == 0:
-            return self.heuristic1(node.board, node.side)
+            return self.calculate_weight(node.board, node.side, node.move)
         if node.board.is_ended():
-            return self.heuristic1(node.board, node.side)
+            return self.calculate_weight(node.board, node.side, node.move)
         children = []
         if node.side == starting_side:
             value = -np.inf
@@ -97,6 +97,18 @@ class Ai_MinMaxBase(Ai_Base):
     
     def heuristic3(self, board: Board, side: int):
         return np.sum(board.board == 0)
+    
+    def heuristic4(self, board: Board, side: int): #bardzo kosztowna heurystyka
+        available_moves = board.get_valid_moves(side)
+        if len(available_moves) == 0:
+            weight = 0
+            for move in available_moves:
+                stones = board.get_affected_stones(move, side)
+                weight += len(stones)
+            return weight
+        else:
+            return -1
+
 
 
 
@@ -110,9 +122,9 @@ class ABPruning(Ai_MinMaxBase):
 
     def minmax(self,node, depth: int, starting_side: int = 0):
         if depth == 0:
-            return self.heuristic1(node.board, node.side)
+            return self.calculate_weight(node.board, node.side, node.move)
         if node.board.is_ended():
-            return self.heuristic1(node.board, node.side)
+            return self.calculate_weight(node.board, node.side, node.move)
         children = []
         if node.side == starting_side:
             value = -np.inf

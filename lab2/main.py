@@ -26,7 +26,7 @@ players[ABPruning(4)] = 0
 def benchmark():
     number = 0
     start_time = time.time()
-    for i in range(1):
+    for i in range(5):
         for player1 in players.keys():
             for player2 in players.keys():
                 number += 1
@@ -38,8 +38,12 @@ def benchmark():
                 elif result[0] < result[1]:
                     players[player2] += 1
     print("time: ", time.time() - start_time)
-benchmark()
+#benchmark()
 #cProfile.run('benchmark()') 
+
+game.setupPlayers(Ai_MinMaxBase(1), ABPruning(5))
+result = game.play()
+print(result)
 
 for player, score in players.items():
     print(str(player), score)
