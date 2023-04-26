@@ -11,11 +11,11 @@ random.seed(2137)
 game = Game()
 
 players = {}
-players[Ai_Random()] = 0
-players[Ai_MinMaxBase(1)] = 0
-players[Ai_MinMaxBase(2)] = 0
-players[Ai_MinMaxBase(3)] = 0
-players[ABPruning(4)] = 0
+players[Ai_Random()] = (0,0)
+players[Ai_MinMaxBase(1)] = (0,0)
+players[Ai_MinMaxBase(2)] = (0,0)
+players[Ai_MinMaxBase(3)] = (0,0)
+players[ABPruning(4)] = (0,0)
 
 
 
@@ -26,7 +26,7 @@ players[ABPruning(4)] = 0
 def benchmark():
     number = 0
     start_time = time.time()
-    for i in range(5):
+    for i in range(10):
         for player1 in players.keys():
             for player2 in players.keys():
                 number += 1
@@ -34,16 +34,18 @@ def benchmark():
                 game.setupPlayers(player1, player2)
                 result = game.play()
                 if result[0] > result[1]:
-                    players[player1] += 1
+                    players[player1] = (players[player1][0] + 1, players[player1][1])
                 elif result[0] < result[1]:
-                    players[player2] += 1
+                    players[player2] = (players[player2][0] + 1, players[player2][1])
+                players[player1] = (players[player1][0], player1.total_time/player1.total_moves)
+                players[player2] = (players[player2][0], player2.total_time/player2.total_moves)
     print("time: ", time.time() - start_time)
-#benchmark()
+benchmark()
 #cProfile.run('benchmark()') 
 
 game.setupPlayers(Ai_MinMaxBase(1), ABPruning(5))
-result = game.play()
-print(result)
-
+#result = game.play()
+#print(result)
+print("AI_name, wins, avg time")
 for player, score in players.items():
     print(str(player), score)

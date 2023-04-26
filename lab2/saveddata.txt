@@ -4,3 +4,12 @@ Ai_MinMaxBase(1) 21
 Ai_MinMaxBase(2) 25
 Ai_MinMaxBase(3) 25
 ABPruning(4) 32
+
+
+time:  595.1195435523987
+AI_name, wins, avg time
+Ai_Random (40, 1.0)
+Ai_MinMaxBase(1) (39, 0.0011165550170284463)
+Ai_MinMaxBase(2) (49, 0.007868335696037404)
+Ai_MinMaxBase(3) (48, 0.0948418721243715)
+ABPruning(4) (63, 0.07811220697995995)

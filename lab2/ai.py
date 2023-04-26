@@ -1,4 +1,5 @@
 import random
+import time
 from game import Board, second_side
 import multiprocessing as mp
 import numpy as np
@@ -19,6 +20,8 @@ class Node:
     
 class Ai_Base:
     def __init__(self) -> None:
+        self.total_time = 0
+        self.total_moves = 0
         pass
 
     def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
@@ -37,6 +40,8 @@ class Ai_Base:
 
 class Ai_Random(Ai_Base):
     def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
+        self.total_time += 1
+        self.total_moves += 1
         if len(valid_moves) == 0:
             return None
         return random.choice(valid_moves)
@@ -52,10 +57,13 @@ class Ai_MinMaxBase(Ai_Base):
         return super().__str__() + f"({self.depth})"
 
     def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
+        start = time.time()
         root = Node(board,side,None)
         self.minmax(root, self.depth, side)
         tree = root.children
         tree.sort(key=lambda x: x.weight, reverse=True)
+        self.total_time += time.time() - start
+        self.total_moves += 1
         if len(tree) > 0:
             return tree[0].move
         else: None
