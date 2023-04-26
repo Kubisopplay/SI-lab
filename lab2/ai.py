@@ -1,13 +1,12 @@
 import random
-from game import Board, Move, second_side
+from game import Board, second_side
 import multiprocessing as mp
-
+import numpy as np
 class Node:
-    def __init__(self, board: Board, side: int,  move:Move,depth: int) -> None:
+    def __init__(self, board: Board, side: int,  move:tuple) -> None:
         self.board = board
         self.side = side
-        self.depth = depth
-        self.move = move
+        self.move = move #move that led to this node
         self.children = []
         self.weight = 0
     
@@ -22,10 +21,10 @@ class Ai_Base:
     def __init__(self) -> None:
         pass
 
-    def get_move(self, board: Board, side: int, valid_moves: list) -> Move:
+    def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
         pass
     
-    def calculate_weight(self, board: Board, side: int, move: Move):
+    def calculate_weight(self, board: Board, side: int, move: tuple):
         pass
     
     def create_decision_tree(self, board: Board, side: int, depth: int):
@@ -37,7 +36,9 @@ class Ai_Base:
 
 
 class Ai_Random(Ai_Base):
-    def get_move(self, board: Board, side: int, valid_moves: list) -> Move:
+    def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
+        if len(valid_moves) == 0:
+            return None
         return random.choice(valid_moves)
     
 
@@ -50,28 +51,91 @@ class Ai_MinMaxBase(Ai_Base):
     def __str__(self):
         return super().__str__() + f"({self.depth})"
 
-    def get_move(self, board: Board, side: int, valid_moves: list) -> Move:
-        tree = self.create_decision_tree(board, side, self.depth)
+    def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
+        root = Node(board,side,None)
+        self.minmax(root, self.depth, side)
+        tree = root.children
         tree.sort(key=lambda x: x.weight, reverse=True)
         if len(tree) > 0:
             return tree[0].move
         else: None
         
     
-    def calculate_weight(self, board: Board, side: int, move: Move):
-        return len(move.affected_stones)
+    def calculate_weight(self, board: Board, side: int, move: tuple):
+        return self.heuristic1(board, side)
     
-    def create_decision_tree(self, board: Board, side: int, depth: int):
+    def minmax(self,node, depth: int, starting_side: int = 0):
+        if depth == 0:
+            return self.heuristic1(node.board, node.side)
+        if node.board.is_ended():
+            return self.heuristic1(node.board, node.side)
         children = []
-        moves = board.get_valid_moves(side)
-        for move in moves:
-            node = Node(board.copy(), second_side(side),move, depth)
-            node.board.do_move(move, side)
-            node.weight = self.calculate_weight(board, side, move)
-            if depth > 1:
-                node.add_children(self.create_decision_tree(node.board, node.side, depth-1))
-                node.weight -= sum([child.weight for child in node.children])
-            #Stack overflow incoming, but i cba to fix it. 
-            children.append(node)
-        return children
+        if node.side == starting_side:
+            value = -np.inf
+            for move in node.board.get_valid_moves(node.side):
+                new_node = Node(node.board.copy(), second_side(node.side), move)
+                new_node.board.do_move(move, node.side)
+                value = max(value, self.minmax(new_node,depth-1, starting_side))
+                new_node.weight = value
+                children.append(new_node)
+        else:
+            value = np.inf
+            for move in node.board.get_valid_moves(node.side):
+                new_node = Node(node.board.copy(), second_side(node.side), move)
+                new_node.board.do_move(move, node.side)
+                value = min(value, self.minmax(new_node,depth-1, starting_side))
+                new_node.weight = value
+                children.append(new_node)
+        node.add_children(children)
+        return value
 
+    def heuristic1(self, board: Board, side: int):
+        return np.sum(board.board == side) #whatever
+    
+    def heuristic2(self, board: Board, side: int):
+        return len(board.get_valid_moves(side)) #kosztowna heurystyka
+    
+    def heuristic3(self, board: Board, side: int):
+        return np.sum(board.board == 0)
+
+
+
+class ABPruning(Ai_MinMaxBase):
+    
+    def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
+        self.alpha = -np.inf
+        self.beta = np.inf
+        return super().get_move(board, side, valid_moves)
+    
+
+    def minmax(self,node, depth: int, starting_side: int = 0):
+        if depth == 0:
+            return self.heuristic1(node.board, node.side)
+        if node.board.is_ended():
+            return self.heuristic1(node.board, node.side)
+        children = []
+        if node.side == starting_side:
+            value = -np.inf
+            for move in node.board.get_valid_moves(node.side):
+                new_node = Node(node.board.copy(), second_side(node.side), move)
+                new_node.board.do_move(move, node.side)
+                value = max(value, self.minmax(new_node,depth-1, starting_side))
+                new_node.weight = value
+                children.append(new_node)
+                if(value > self.beta):
+                    break
+                self.alpha = max(self.alpha, value)
+                
+        else:
+            value = np.inf
+            for move in node.board.get_valid_moves(node.side):
+                new_node = Node(node.board.copy(), second_side(node.side), move)
+                new_node.board.do_move(move, node.side)
+                value = min(value, self.minmax(new_node,depth-1, starting_side))
+                new_node.weight = value
+                children.append(new_node)
+                if(value < self.alpha):
+                    break
+                self.beta = min(self.beta, value)
+        node.add_children(children)
+        return value

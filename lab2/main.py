@@ -1,5 +1,6 @@
+import time
 from game import Game
-from ai import Ai_Random, Ai_MinMaxBase
+from ai import Ai_Random, Ai_MinMaxBase, ABPruning
 import random
 import cProfile
 import multiprocessing as mp
@@ -14,7 +15,7 @@ players[Ai_Random()] = 0
 players[Ai_MinMaxBase(1)] = 0
 players[Ai_MinMaxBase(2)] = 0
 players[Ai_MinMaxBase(3)] = 0
- 
+players[ABPruning(4)] = 0
 
 
 
@@ -24,6 +25,7 @@ players[Ai_MinMaxBase(3)] = 0
 
 def benchmark():
     number = 0
+    start_time = time.time()
     for i in range(1):
         for player1 in players.keys():
             for player2 in players.keys():
@@ -35,9 +37,9 @@ def benchmark():
                     players[player1] += 1
                 elif result[0] < result[1]:
                     players[player2] += 1
-    
-#benchmark()
-cProfile.run('benchmark()') 
+    print("time: ", time.time() - start_time)
+benchmark()
+#cProfile.run('benchmark()') 
 
 for player, score in players.items():
     print(str(player), score)

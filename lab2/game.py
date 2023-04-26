@@ -11,22 +11,12 @@ def is_valid_coords(coords):
 def second_side(side):
     return 2 if side == 1 else 1
 
-class Move:
-    def __init__(self, coords1, coords2, affected_stones):
-        self.coords1 = coords1
-        self.coords2 = coords2
-        self.affected_stones = affected_stones
-        #if max(abs(coords1[0]-coords2[0]), abs(coords1[1]-coords2[1]))-1 > len(affected_stones):
-        #   print("Invalid move")
-        
-    def __str__(self):
-        return f"Move from {self.coords1} to {self.coords2} affected {len(self.affected_stones)}"
+
 
 class Board:
     MOVE_DIRS = [(-1, -1), (-1, 0), (-1, 1),
              (0, -1),           (0, 1),
              (1, -1), (1, 0), (1, 1)]
-    pool : mp.Pool
 
     def __init__(self):
         self.board = np.zeros((8,8), dtype=np.int8) # 1 -> black, 2 -> white
@@ -38,11 +28,11 @@ class Board:
     def get_board(self):
         return self.board.copy()
     
-    def do_move(self, move: Move, player):
+    def do_move(self, move: tuple, player):
         if move == None:
             return False
-        self.board[move.coords2[0], move.coords2[1]] = player
-        self.convert_stones(move.affected_stones)
+        self.board[move] = player
+        self.convert_stones(self.get_affected_stones(player,move))
         return True
     
     def convert_stones(self, affected):
@@ -50,6 +40,23 @@ class Board:
             self.board[coords] = second_side(self.board[coords])
         pass
 
+    def get_affected_stones(self, side, move: tuple) -> list:
+        affected = []
+        second = second_side(side)
+        for dir in Board.MOVE_DIRS:
+            dx, dy = dir
+            x, y = move
+            x += dx
+            y += dy
+            potential = []
+            while is_valid_coords((x,y)) and self.board[x,y] == second:
+                potential.append((x,y))
+                x += dx
+                y += dy
+            if is_valid_coords((x,y)) and self.board[x,y] == side:
+                affected.extend(potential)
+                
+        return affected
 
     def get_valid_moves(self, side) -> list:
         valid_moves = []
@@ -57,20 +64,16 @@ class Board:
         for i in range(8):
             for j in range(8):
                 if self.board[i,j] == side:
-                    for dir in Board.MOVE_DIRS:
-                        coords = add_coords((i,j), dir)
-                        affected = [coords]
-
-                        while is_valid_coords(coords) and self.board[coords] != side:
-                            if self.board[coords] == second:
-                                affected.append(coords)
-                                coords = add_coords(coords, dir)
-                                continue
-
-                            if self.board[coords] == 0:
-                                valid_moves.append(Move((i,j), coords, affected))
-                                break
-                            break
+                    for dx, dy in Board.MOVE_DIRS:
+                        x = i + dx
+                        y = j + dy
+                        count = 0
+                        while 0<=x<8 and 0<=y<8 and self.board[x,y] not in (0,side):
+                            count += 1
+                            x+=dx
+                            y+=dy
+                        if 0<=x<8 and 0<=y<8 and self.board[x,y] == 0 and count > 0:
+                            valid_moves.append((x,y))
         return valid_moves
 
 
@@ -79,6 +82,12 @@ class Board:
         new_board.board = self.board.copy()
         return new_board
     
+    def is_ended(self):
+        return not (np.sum(self.board ==0) or 
+                    len(self.get_valid_moves(1)) == 0 and 
+                    len(self.get_valid_moves(2)) == 0)
+
+
     def get_score(self):
         return np.sum(self.board == 1), np.sum(self.board == 2)
     def __str__(self):
@@ -108,6 +117,8 @@ class Game:
     def get_score(self):
         return self.main_board.get_score()
     
+
+    
     def play(self):
         self.main_board = Board()
         global valid_called
@@ -120,13 +131,14 @@ class Game:
                 self.side = second_side(self.side)
                 if len(self.main_board.get_valid_moves(self.side)) == 0:
                     break
+                continue
             if np.sum(self.main_board.board == 0) == 0:
                 break
             if np.sum(self.main_board.board == 1) == 0 or np.sum(self.main_board.board == 2) == 0:
                 break
             move = self.Turn(valid_moves)
    
-        print(valid_called)
+        #print(valid_called)
         return self.get_score()
     
     def get_winner(self, score):
