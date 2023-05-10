@@ -4,7 +4,7 @@ from game import Board, second_side
 import multiprocessing as mp
 import numpy as np
 class Node:
-    def __init__(self, board: Board, side: int,  move:tuple) -> None:
+    def __init__(self, board: Board, side: int,  move) -> None:
         self.board = board
         self.side = side
         self.move = move #move that led to this node
@@ -24,7 +24,7 @@ class Ai_Base:
         self.total_moves = 0
         pass
 
-    def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
+    def get_move(self, board: Board, side: int, valid_moves: list):
         pass
     
     def calculate_weight(self, board: Board, side: int, move: tuple):
@@ -39,7 +39,7 @@ class Ai_Base:
 
 
 class Ai_Random(Ai_Base):
-    def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
+    def get_move(self, board: Board, side: int, valid_moves: list):
         self.total_time += 1
         self.total_moves += 1
         if len(valid_moves) == 0:
@@ -56,7 +56,7 @@ class Ai_MinMaxBase(Ai_Base):
     def __str__(self):
         return super().__str__() + f"({self.depth})"
 
-    def get_move(self, board: Board, side: int, valid_moves: list) -> tuple:
+    def get_move(self, board: Board, side: int, valid_moves: list):
         start = time.time()
         root = Node(board,side,None)
         self.minmax(root, self.depth, side)
@@ -70,7 +70,7 @@ class Ai_MinMaxBase(Ai_Base):
         
     
     def calculate_weight(self, board: Board, side: int, move: tuple):
-        return self.heuristic1(board, side)
+        return self.heuristic1(board, side)  + self.heuristic4(board, side) + self.heuristic5(board, side, move)*4 + self.heuristic6(board, side)
     
     def minmax(self,node, depth: int, starting_side: int = 0):
         if depth == 0:
@@ -108,14 +108,26 @@ class Ai_MinMaxBase(Ai_Base):
     
     def heuristic4(self, board: Board, side: int): #bardzo kosztowna heurystyka
         available_moves = board.get_valid_moves(side)
-        if len(available_moves) == 0:
+        if len(available_moves) != 0:
             weight = 0
             for move in available_moves:
-                stones = board.get_affected_stones(move, side)
+                stones = board.get_affected_stones(side, move)
                 weight += len(stones)
             return weight
         else:
             return -1
+        
+    def heuristic5(self,board :Board,side,move):
+        return len(board.get_affected_stones(side,move))
+    
+    def heuristic6(self,board: Board, side: int):
+        if board.is_ended():
+            if np.sum(board.board ==side) :
+                return np.inf
+            else:
+                return -np.inf
+        else:
+            return 0
 
 
 
