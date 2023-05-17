@@ -73,7 +73,7 @@ class Board:
                             x+=dx
                             y+=dy
                         if 0<=x<8 and 0<=y<8 and self.board[x,y] == 0 and count > 0:
-                            valid_moves.append((x,y))
+                            if (x,y) not in valid_moves: valid_moves.append((x,y))
         return valid_moves
 
 
