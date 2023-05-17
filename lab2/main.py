@@ -1,6 +1,6 @@
 import time
 from game import Game
-from ai import Ai_Random, Ai_MinMaxBase, ABPruning
+from ai import Ai_Random, Ai_MinMaxBase, ABPruning,TestPruning
 import random
 import cProfile
 import multiprocessing as mp
@@ -11,12 +11,14 @@ random.seed(2137)
 game = Game()
 
 players = {}
-players[Ai_Random()] = (0,0)
-players[Ai_MinMaxBase(1)] = (0,0)
-players[Ai_MinMaxBase(2)] = (0,0)
-players[Ai_MinMaxBase(3)] = (0,0)
-players[ABPruning(4)] = (0,0)
 
+for i in range(1, 7):
+    temp={}
+    for j in range(1, 7):
+        temp["heuristic"+str(j)]=0
+    temp["heuristic1"]=1
+    temp["heuristic"+str(i)]=1 
+    players[TestPruning(3,temp)]=(0,0)
 
 
 #game.setupPlayers(Ai_MinMaxBase(3), Ai_MinMaxBase(3))
@@ -26,7 +28,7 @@ players[ABPruning(4)] = (0,0)
 def benchmark():
     number = 0
     start_time = time.time()
-    for i in range(10):
+    for i in range(1):
         for player1 in players.keys():
             for player2 in players.keys():
                 number += 1

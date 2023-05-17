@@ -171,3 +171,31 @@ class ABPruning(Ai_MinMaxBase):
                 self.beta = min(self.beta, value)
         node.add_children(children)
         return value
+        
+
+class TestPruning(ABPruning):
+    def __init__(self, depth: int, heuristics) -> None:
+        super().__init__(depth)
+        self.total_time = 0
+        self.total_moves = 0
+        self.heuristics = heuristics
+        self.heuristic_table = {}
+        self.heuristic_table["heuristic1"] = self.heuristic1
+        self.heuristic_table["heuristic2"] = self.heuristic2
+        self.heuristic_table["heuristic3"] = self.heuristic3
+        self.heuristic_table["heuristic4"] = self.heuristic4
+        self.heuristic_table["heuristic5"] = self.heuristic5
+        self.heuristic_table["heuristic6"] = self.heuristic6
+        pass
+
+    def calculate_weight(self, board: Board, side: int, move: tuple):
+        weight = 0
+        for heuristic in self.heuristics:
+            if heuristic == "heuristic5":
+                weight += self.heuristic_table[heuristic](board, side, move)*self.heuristics[heuristic]
+                continue
+            weight += self.heuristic_table[heuristic](board, side)* self.heuristics[heuristic]
+        return weight
+    
+    def __str__(self):
+        return super().__str__() + f"({self.depth})" + self.heuristics.values().__str__()
