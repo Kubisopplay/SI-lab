@@ -71,7 +71,7 @@ class Ai_MinMaxBase(Ai_Base):
     
     def calculate_weight(self, board: Board, side: int, move: tuple):
         return self.heuristic1(board, side)  + self.heuristic4(board, side) + self.heuristic5(board, side, move)*4 + self.heuristic6(board, side)
-    
+
     def minmax(self,node, depth: int, starting_side: int = 0):
         if depth == 0:
             return self.calculate_weight(node.board, node.side, node.move)
@@ -122,7 +122,7 @@ class Ai_MinMaxBase(Ai_Base):
     
     def heuristic6(self,board: Board, side: int):
         if board.is_ended():
-            if np.sum(board.board ==side) :
+            if np.sum(board.board ==side) > np.sum(board.board == second_side(side)) :
                 return np.inf
             else:
                 return -np.inf
