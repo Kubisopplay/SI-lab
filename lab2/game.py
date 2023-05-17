@@ -112,8 +112,8 @@ class Game:
         move = active_player.get_move(self.main_board, self.side, valid_moves)
         self.main_board.do_move(move, self.side)
         self.side = second_side(self.side)
-        print(self.main_board)
-        print("-----------------------")
+        #print(self.main_board)
+        #print("-----------------------")
         return move
 
     def get_score(self):
