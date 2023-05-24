@@ -13,3 +13,12 @@ Ai_MinMaxBase(1) (39, 0.0011165550170284463)
 Ai_MinMaxBase(2) (49, 0.007868335696037404)
 Ai_MinMaxBase(3) (48, 0.0948418721243715)
 ABPruning(4) (63, 0.07811220697995995)
+
+time:  547.2681896686554
+AI_name, wins, avg time
+TestPruning(3)dict_values([1, 0, 0, 0, 0, 0]) (6, 0.231236406452748)
+TestPruning(3)dict_values([1, 1, 0, 0, 0, 0]) (5, 0.27379620671272276)
+TestPruning(3)dict_values([1, 0, 1, 0, 0, 0]) (3, 0.2798216031657325)
+TestPruning(3)dict_values([1, 0, 0, 1, 0, 0]) (8, 0.18062159942053155)
+TestPruning(3)dict_values([1, 0, 0, 0, 1, 0]) (6, 0.28410873942905)
+TestPruning(3)dict_values([1, 0, 0, 0, 0, 1]) (6, 0.26504943629825345)

@@ -91,7 +91,7 @@ class Board:
     def get_score(self):
         return np.sum(self.board == 1), np.sum(self.board == 2)
     def __str__(self):
-        return str(self.board).replace("0"," ").replace("1","\N{black circle}").replace("2","\N{white circle}")
+        return str(self.board)#.replace("0"," ").replace("1","\N{black circle}").replace("2","\N{white circle}")
 
 
 
@@ -112,8 +112,8 @@ class Game:
         move = active_player.get_move(self.main_board, self.side, valid_moves)
         self.main_board.do_move(move, self.side)
         self.side = second_side(self.side)
-        #print(self.main_board)
-        #print("-----------------------")
+        print(self.main_board)
+        print("-----------------------")
         return move
 
     def get_score(self):

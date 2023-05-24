@@ -198,4 +198,4 @@ class TestPruning(ABPruning):
         return weight
     
     def __str__(self):
-        return super().__str__() + f"({self.depth})" + self.heuristics.values().__str__()
+        return super().__str__() + self.heuristics.values().__str__()
