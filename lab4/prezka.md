@@ -102,7 +102,7 @@ Zmiany w hiperparametrach, szczególnie w minimalnej ilości liści pogarszają 
 
 # Dane standaryzowane i normalizowane
 
-Wyniki są ogólnie gorsze, nie udało mi się znaleźć powodu
+Wyniki są ogólnie gorsze, nie udało mi się znaleźć powodu. Innych szczególnych własności nie znalazłem
 
 
 # Wykresy!
