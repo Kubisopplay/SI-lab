@@ -63,7 +63,7 @@ F1: 0.36060606060606065
 
 Naiwny klasyfikatory bayesa przeszkolony na danych z uciętymi wartościami krawędziowymi ma poważne problemy z ich klasyfikacją. Ma problemy ekstrapolować dane, które nie są w jego zbiorze treningowym.
 
-## Naiwny Byes ze zwiększonym wygładzaniem
+## Naiwny Bayes ze zwiększonym wygładzaniem
 
 Taka sama sprawność dla danych losowych
 
@@ -77,7 +77,7 @@ Number of mispredictions: 11
 Accuracy: 0.3888888888888889
 F1: 0.40415584415584416
 
-## naiwny byes z wymiarami ustawionymi na start
+## naiwny bayes z wymiarami ustawionymi na start
 
 Udało mi się wywołać błąd dzielenia przez 0
 wyniki są jeszcze gorsze niż poprzednio
@@ -96,7 +96,7 @@ F1: 0.07272727272727272
 
 ## Drzewa
 
-Drzewo z ustawieniami domyślnymi sprawuje się trochę lepiej niż byes z domyślnymi, szczególnie dla przypadków krańcowych
+Drzewo z ustawieniami domyślnymi sprawuje się trochę lepiej niż bayes z domyślnymi, szczególnie dla przypadków krańcowych
 
 Zmiany w hiperparametrach, szczególnie w minimalnej ilości liści pogarszają wyniki
 
