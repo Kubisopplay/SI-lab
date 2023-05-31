@@ -27,11 +27,41 @@ Przeszkolony za pomocą zestawu ogołoconego z wartości minimalnych i maksymaln
 Dla randomowych wartości testowych
 Number of mispredictions: 1
 Accuracy: 0.9090909090909091
+F1: 0.7999999999999999
 
 Dla minimalnych i maksymalnych wartości testowych
+Number of mispredictions: 11
+Accuracy: 0.3888888888888889
+F1: 0.36060606060606065
+
+### WNIOSEK
+Naiwny klasyfikatory bayesa przeszkolony na danych z uciętymi wartościami krawędziowymi ma poważne problemy z ich klasyfikacją. Ma problemy ekstrapolować dane, które nie są w jego zbiorze treningowym.
+
+## Naiwny Byes ze zwiększonym wygładzaniem
+
+Taka sama sprawność dla danych losowych
+
+Number of mispredictions: 1
+Accuracy: 0.9090909090909091
+F1: 0.7999999999999999
+
+Dla danych krańcowych f1 minimalnie wzrósł
 
 Number of mispredictions: 11
 Accuracy: 0.3888888888888889
+F1: 0.40415584415584416
 
-### WNIOSEK
-Naiwny klasyfikatory bayesa przeszkolony na danych z uciętymi wartościami krawędziowymi ma poważne problemy z ich klasyfikacją
+## naiwny byes z wymiarami ustawionymi na start
+
+Udało mi się wywołać błąd dzielenia przez 0
+wyniki są jeszcze gorsze niż poprzednio
+
+### Losowe
+Number of mispredictions: 8
+Accuracy: 0.2727272727272727
+F1: 0.08571428571428572
+### Krańce
+Number of mispredictions: 14
+Accuracy: 0.2222222222222222
+F1: 0.07272727272727272
+

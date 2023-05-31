@@ -91,7 +91,12 @@ class Board:
     def get_score(self):
         return np.sum(self.board == 1), np.sum(self.board == 2)
     def __str__(self):
+<<<<<<< Updated upstream
         return str(self.board)#.replace("0"," ").replace("1","\N{black circle}").replace("2","\N{white circle}")
+=======
+        return str(self.board)
+        #return str(self.board).replace("0"," ").replace("1","\N{black circle}").replace("2","\N{white circle}")
+>>>>>>> Stashed changes
 
 
 

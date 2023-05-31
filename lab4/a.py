@@ -5,7 +5,7 @@ import sklearn as sk
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 
 data = pd.read_csv('glass.data')
@@ -40,10 +40,24 @@ print(edge_cases)
 class1 = GaussianNB()
 class1.fit(training_data.iloc[:, 2:-1], training_data.iloc[:, -1])
 
-predictions = class1.predict(random_data.iloc[:, 2:-1])
-print("Number of mispredictions: "+ str((predictions != random_data.iloc[:, -1]).sum()))
-print("Accuracy: " + str(accuracy_score(random_data.iloc[:, -1], predictions)))
+def predict(predictor):
+    predictions = predictor.predict(random_data.iloc[:, 2:-1])
+    print("Number of mispredictions: "+ str((predictions != random_data.iloc[:, -1]).sum()))
+    print("Accuracy: " + str(accuracy_score(random_data.iloc[:, -1], predictions)))
+    print("F1: " + str(f1_score(random_data.iloc[:, -1], predictions, average='macro')))
 
-predictions = class1.predict(edge_cases.iloc[:, 3:-1])
-print("Number of mispredictions: "+ str((predictions != edge_cases.iloc[:, -1]).sum()))
-print("Accuracy: " + str(accuracy_score(edge_cases.iloc[:, -1], predictions)))
+    predictions = predictor.predict(edge_cases.iloc[:, 3:-1])
+    print("Number of mispredictions: "+ str((predictions != edge_cases.iloc[:, -1]).sum()))
+    print("Accuracy: " + str(accuracy_score(edge_cases.iloc[:, -1], predictions)))
+    print("F1: " + str(f1_score(edge_cases.iloc[:, -1], predictions, average='macro')))
+
+predict(class1)
+
+class2 = GaussianNB(var_smoothing=0.0001)
+class2.fit(training_data.iloc[:, 2:-1], training_data.iloc[:, -1])
+
+predict(class2)
+
+class3 = GaussianNB(priors=np.array([1,0,0,0,0,0]), var_smoothing=0.0001)
+class3.fit(training_data.iloc[:, 2:-1], training_data.iloc[:, -1])
+predict(class3)
