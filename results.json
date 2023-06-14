@@ -1,0 +1,122 @@
+{
+    "Normal Naive Bayes": {
+        "random": {
+            "accuracy": 0.9090909090909091,
+            "f1": 0.7999999999999999
+        },
+        "edge": {
+            "accuracy": 0.3888888888888889,
+            "f1": 0.36060606060606065
+        }
+    },
+    "Naive Bayes with smoothing": {
+        "random": {
+            "accuracy": 0.9090909090909091,
+            "f1": 0.7999999999999999
+        },
+        "edge": {
+            "accuracy": 0.3888888888888889,
+            "f1": 0.40415584415584416
+        }
+    },
+    "Naive Bayes with preset priors": {
+        "random": {
+            "accuracy": 0.2727272727272727,
+            "f1": 0.08571428571428572
+        },
+        "edge": {
+            "accuracy": 0.2222222222222222,
+            "f1": 0.07272727272727272
+        }
+    },
+    "Normal Decision Tree": {
+        "random": {
+            "accuracy": 0.6363636363636364,
+            "f1": 0.511904761904762
+        },
+        "edge": {
+            "accuracy": 0.8333333333333334,
+            "f1": 0.8400000000000001
+        }
+    },
+    "Decision Tree with min_samples_leaf=5, max_depth=5": {
+        "random": {
+            "accuracy": 0.7272727272727273,
+            "f1": 0.5619047619047619
+        },
+        "edge": {
+            "accuracy": 0.5555555555555556,
+            "f1": 0.48888888888888893
+        }
+    },
+    "Decision Tree with max_depth=20, criterion=entropy": {
+        "random": {
+            "accuracy": 0.7272727272727273,
+            "f1": 0.7466666666666667
+        },
+        "edge": {
+            "accuracy": 0.8333333333333334,
+            "f1": 0.7333333333333334
+        }
+    },
+    "Normal Naive Bayes with standardized data": {
+        "random": {
+            "accuracy": 0.6363636363636364,
+            "f1": 0.4583333333333333
+        },
+        "edge": {
+            "accuracy": 0.4444444444444444,
+            "f1": 0.4915384615384616
+        }
+    },
+    "Naive Bayes with smoothing with standardized data": {
+        "random": {
+            "accuracy": 0.6363636363636364,
+            "f1": 0.4583333333333333
+        },
+        "edge": {
+            "accuracy": 0.4444444444444444,
+            "f1": 0.4915384615384616
+        }
+    },
+    "Naive Bayes with preset priors with standardized data": {
+        "random": {
+            "accuracy": 0.2727272727272727,
+            "f1": 0.08571428571428572
+        },
+        "edge": {
+            "accuracy": 0.2222222222222222,
+            "f1": 0.07272727272727272
+        }
+    },
+    "Normal Decision Tree with standardized data": {
+        "random": {
+            "accuracy": 0.5454545454545454,
+            "f1": 0.5238095238095238
+        },
+        "edge": {
+            "accuracy": 0.4444444444444444,
+            "f1": 0.4715384615384616
+        }
+    },
+    "Decision Tree with min_samples_leaf=5, max_depth=5 with standardized data": {
+        "random": {
+            "accuracy": 0.6363636363636364,
+            "f1": 0.6
+        },
+        "edge": {
+            "accuracy": 0.2777777777777778,
+            "f1": 0.26
+        }
+    },
+    "Decision Tree with max_depth=20, criterion=entropy with standardized data": {
+        "random": {
+            "accuracy": 0.36363636363636365,
+            "f1": 0.40444444444444444
+        },
+        "edge": {
+            "accuracy": 0.8888888888888888,
+            "f1": 0.8647619047619048
+        }
+    }
+}
